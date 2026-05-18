@@ -19,7 +19,7 @@ export function Dashboard() {
     },
     {
       title: "Revenue Today",
-      value: "$8,450",
+      value: "8,450",
       change: "+8.1%",
       icon: DollarSign,
       color: "bg-green-500",
