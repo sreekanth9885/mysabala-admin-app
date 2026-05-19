@@ -52,7 +52,7 @@ export function Login() {
           </div>
 
           <h1 className="text-4xl font-bold mb-4">
-            Food Delivery Admin Sreekanth
+            Food Delivery Admin
           </h1>
 
           <p className="text-xl text-white/90">
