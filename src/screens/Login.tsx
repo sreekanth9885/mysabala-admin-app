@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Truck } from "lucide-react";
 import { useLoginMutation } from "../features/auth/authApi";
-
+import { useAuth } from "../features/hooks/useAuth";
 export function Login() {
   const navigate = useNavigate();
-
+  const { login: saveLogin } = useAuth();
   const [login, { isLoading }] = useLoginMutation();
 
   const [email, setEmail] = useState("");
@@ -23,12 +23,10 @@ export function Login() {
       console.log("Login Response:", response);
 
       // Store token
-      localStorage.setItem("token", response.token);
-
-      // Optional: store user
-      localStorage.setItem("user", JSON.stringify(response.user));
-
-      // Navigate to dashboard
+      saveLogin({
+        token: response.token,
+        user: response.user,
+      });
       navigate("/");
 
     } catch (error: any) {

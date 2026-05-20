@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Search, Plus, Edit, Trash2, Filter } from "lucide-react";
-import { ImageWithFallback } from "../components/ImageWithFallback";
+import { ImageWithFallback } from "../../components/ImageWithFallback";
 
 export function FoodItemsList() {
   const [searchQuery, setSearchQuery] = useState("");

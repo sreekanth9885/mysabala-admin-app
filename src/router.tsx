@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { Login } from "./screens/Login";
 import { Dashboard } from "./screens/Dashboard";
-import { FoodItemsList } from "./screens/FoodItemsList";
+import { FoodItemsList } from "./features/fooditems/FoodItemsList";
 import { AddFoodItem } from "./screens/AddFoodItem";
 import { EditFoodItem } from "./screens/EditFoodItem";
 import { OrdersManagement } from "./screens/OrdersManagement";

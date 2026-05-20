@@ -3,27 +3,9 @@ import {
   useEffect,
   useState,
 } from "react";
+import type { AuthContextType, User } from "../types/types";
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  created_at?: string;
-};
 
-type AuthContextType = {
-  user: User | null;
-  token: string | null;
-
-  login: (data: {
-    token: string;
-    user: User;
-  }) => void;
-
-  logout: () => void;
-
-  isAuthenticated: boolean;
-};
 
 export const AuthContext =
   createContext<AuthContextType | null>(null);

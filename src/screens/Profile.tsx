@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { User, Mail, Phone, MapPin, Edit, Save, LogOut, Shield } from "lucide-react";
+import { User, Mail, Phone, Edit, Save, LogOut, Shield } from "lucide-react";
+import { useAuth } from "../features/hooks/useAuth";
+import { formatDate } from "../utils/formatDate";
 
 export function Profile() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     name: "Admin User",
     email: "admin@fooddelivery.com",
-    phone: "+1 (555) 123-4567",
+    phone: user?.phone || "",
     location: "San Francisco, CA",
     role: "Super Admin",
   });
@@ -135,24 +138,7 @@ export function Profile() {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <MapPin size={18} className="text-gray-500" />
-                  Location
-                </div>
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={profileData.location}
-                  onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                />
-              ) : (
-                <p className="text-gray-800 bg-gray-50 px-4 py-3 rounded-lg">{profileData.location}</p>
-              )}
-            </div>
+
           </div>
         </div>
       </div>
@@ -161,16 +147,13 @@ export function Profile() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl shadow-sm p-6">
           <h3 className="text-sm font-medium text-gray-600 mb-2">Account Created</h3>
-          <p className="text-2xl font-bold text-gray-800">Jan 15, 2024</p>
+          <p className="text-1xl font-bold text-green-600">{formatDate(user?.created_at)}</p>
         </div>
         <div className="bg-white rounded-xl shadow-sm p-6">
           <h3 className="text-sm font-medium text-gray-600 mb-2">Last Login</h3>
-          <p className="text-2xl font-bold text-gray-800">Today</p>
+          <p className="text-1xl font-bold text-green-600">{formatDate(user?.last_login)}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="text-sm font-medium text-gray-600 mb-2">Total Sessions</h3>
-          <p className="text-2xl font-bold text-gray-800">1,234</p>
-        </div>
+
       </div>
 
       {/* Security Section */}
