@@ -10,12 +10,12 @@ export function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     name: "Admin User",
-    email: "admin@fooddelivery.com",
+    email: user?.email || "",
     phone: user?.phone || "",
     location: "San Francisco, CA",
     role: "Super Admin",
   });
-
+  console.log("userdetails", user);
   const handleLogout = () => {
     navigate("/login");
   };
@@ -27,6 +27,7 @@ export function Profile() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Profile Settings</h1>
@@ -96,7 +97,7 @@ export function Profile() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 />
               ) : (
-                <p className="text-gray-800 bg-gray-50 px-4 py-3 rounded-lg">{profileData.name}</p>
+                <p className="text-gray-800 bg-gray-50 px-4 py-3 rounded-lg">{user?.name}</p>
               )}
             </div>
 
@@ -115,7 +116,7 @@ export function Profile() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 />
               ) : (
-                <p className="text-gray-800 bg-gray-50 px-4 py-3 rounded-lg">{profileData.email}</p>
+                <p className="text-gray-800 bg-gray-50 px-4 py-3 rounded-lg">{user?.email}</p>
               )}
             </div>
 
