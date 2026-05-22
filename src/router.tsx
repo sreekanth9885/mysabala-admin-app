@@ -10,6 +10,8 @@ import { Profile } from "./screens/Profile";
 
 import { Layout } from "./components/Layout";
 import { ProtectedRoute } from "./features/auth/ProtectedRoute";
+import { Categories } from "./features/category/Categories";
+import { Subcategory } from "./features/sub-categories/Subcategory";
 
 export const router = createBrowserRouter([
   {
@@ -56,6 +58,14 @@ export const router = createBrowserRouter([
             path: "profile",
             Component: Profile,
           },
+          {
+            path: "categories",
+            Component: Categories,
+          },
+          {
+            path: "sub-categories",
+            Component: Subcategory,  
+          }
         ],
       },
     ],
