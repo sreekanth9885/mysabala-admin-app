@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Truck } from "lucide-react";
 import { useLoginMutation } from "../features/auth/authApi";
 import { useAuth } from "../features/hooks/useAuth";
+
 export function Login() {
   const navigate = useNavigate();
   const { login: saveLogin } = useAuth();
@@ -10,9 +11,11 @@ export function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     try {
       const response = await login({
@@ -22,19 +25,25 @@ export function Login() {
 
       console.log("Login Response:", response);
 
-      // Store token
+      // Store token (response already has token from transformResponse)
       saveLogin({
         token: response.token,
         user: response.user,
       });
+
       navigate("/");
 
-    } catch (error: any) {
-      console.error("Login Error:", error);
+    } catch (err: any) {
+      console.error("Login Error:", err);
 
-      alert(
-        error?.data?.message || "Invalid email or password"
-      );
+      // Handle different error formats
+      if (err?.data?.message) {
+        setError(err.data.message);
+      } else if (err?.message) {
+        setError(err.message);
+      } else {
+        setError("Login failed. Please try again.");
+      }
     }
   };
 
@@ -63,7 +72,6 @@ export function Login() {
       <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-xl p-8">
-
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-2">
                 Welcome Back
@@ -74,8 +82,13 @@ export function Login() {
               </p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                {error}
+              </div>
+            )}
 
+            <form onSubmit={handleLogin} className="space-y-6">
               {/* Email */}
               <div>
                 <label
@@ -128,14 +141,13 @@ export function Login() {
                 </div>
               </div>
 
-              {/* Remember */}
+              {/* Remember & Forgot */}
               <div className="flex items-center justify-between">
                 <label className="flex items-center">
                   <input
                     type="checkbox"
                     className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
                   />
-
                   <span className="ml-2 text-sm text-gray-600">
                     Remember me
                   </span>
@@ -153,11 +165,10 @@ export function Login() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-orange-600 text-white py-3 rounded-lg font-medium hover:bg-orange-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+                className="w-full bg-orange-600 text-white py-3 rounded-lg font-medium hover:bg-orange-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Signing In..." : "Sign In"}
               </button>
-
             </form>
           </div>
         </div>
