@@ -6,26 +6,14 @@ export function Subcategory() {
   const [open, setOpen] = useState(false);
   const [subcategoryName, setSubcategoryName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleConfirmClick = () => setShowConfirm(true);
-
-  const handleYes = () => {
-    // API call goes here later
-    console.log("Submitted:", { subcategoryName, selectedCategory });
-    setSubcategoryName("");
-    setSelectedCategory("");
-    setShowConfirm(false);
-    setOpen(false);
-  };
-
-  const handleNo = () => setShowConfirm(false);
+  
 
   const handleClose = () => {
     setOpen(false);
     setSubcategoryName("");
     setSelectedCategory("");
-    setShowConfirm(false);
+    
   };
 
   const isValid = subcategoryName.trim() && selectedCategory;
@@ -91,7 +79,7 @@ export function Subcategory() {
           {/* Confirm Button */}
           <div className="py-4 border-t border-neutral-200 flex justify-end">
             <button
-              onClick={handleConfirmClick}
+
               disabled={!isValid}
               className={`px-6 py-3 bg-orange-600 text-white text-sm font-semibold rounded-lg shadow-md border border-orange-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2
                 ${!isValid
@@ -103,31 +91,7 @@ export function Subcategory() {
             </button>
           </div>
 
-          {/* Confirm Overlay */}
-          {showConfirm && (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 rounded-lg bg-white/95 backdrop-blur-sm px-8 text-center">
-              <p className="text-base font-bold uppercase tracking-wide text-neutral-900">
-                Add "{subcategoryName}"?
-              </p>
-              <p className="text-sm text-neutral-500 max-w-xs">
-                Are you sure you want to add this subcategory under "{selectedCategory}"?
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={handleYes}
-                  className="text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded border-2 border-neutral-900 bg-neutral-900 text-stone-100 hover:bg-neutral-700 transition-colors"
-                >
-                  Yes, Add It
-                </button>
-                <button
-                  onClick={handleNo}
-                  className="text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded border-2 border-neutral-300 bg-white text-neutral-500 hover:border-neutral-900 hover:text-neutral-900 transition-colors"
-                >
-                  No, Go Back
-                </button>
-              </div>
-            </div>
-          )}
+          
 
         </div>
       </Modal>

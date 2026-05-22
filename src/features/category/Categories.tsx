@@ -5,24 +5,12 @@ import Modal from "../../components/Modal";
 export function Categories() {
   const [open, setOpen] = useState(false);
   const [categoryName, setCategoryName] = useState("");
-  const [showConfirm, setShowConfirm] = useState(false);
+ 
 
- // const handleConfirmClick = () => setShowConfirm(true);
-
-  const handleYes = () => {
-    // API call goes here later
-    console.log("Submitted:", categoryName);
-    setCategoryName("");
-    setShowConfirm(false);
-    setOpen(false);
-  };
-
-  const handleNo = () => setShowConfirm(false);
-
+ 
   const handleClose = () => {
     setOpen(false);
     setCategoryName("");
-    setShowConfirm(false);
   };
 
   return (
