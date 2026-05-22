@@ -11,6 +11,8 @@ import {
   ShoppingCart,
   LogOut,
   User,
+  List,
+  ArrowDownWideNarrow,
 } from "lucide-react";
 import { useAuth } from "../features/hooks/useAuth";
 
@@ -51,6 +53,16 @@ export function Layout() {
       icon: User,
       label: "Profile",
     },
+    {
+      path: "/categories",
+      icon: List,
+      label: "Categories",  
+    },
+    {
+      path: "/sub-categories",
+      icon: ArrowDownWideNarrow,
+      label: "Sub Categories",    
+    }
   ];
 
   return (
