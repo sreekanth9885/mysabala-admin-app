@@ -1,22 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-interface Category {
-  id: number;
-  name: string;
-  description: string | null;
-  is_active: number;
-  created_at: string;
-}
-
-interface CreateCategoryRequest {
-  name: string;
-  description?: string;
-}
-
-interface ApiResponse<T> {
-  data?: T;
-  message?: string;
-}
+import type {
+  ApiResponse,
+  Category,
+  CreateCategoryRequest,
+} from "../types/types";
 
 export const categoriesApi = createApi({
   reducerPath: 'categoriesApi',

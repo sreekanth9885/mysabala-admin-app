@@ -35,7 +35,16 @@ export function Layout() {
       icon: LayoutDashboard,
       label: "Dashboard",
     },
-
+    {
+      path: "/categories",
+      icon: List,
+      label: "Categories",
+    },
+    {
+      path: "/sub-categories",
+      icon: ArrowDownWideNarrow,
+      label: "Sub Categories",
+    },
     {
       path: "/food-items",
       icon: UtensilsCrossed,
@@ -52,16 +61,6 @@ export function Layout() {
       path: "/profile",
       icon: User,
       label: "Profile",
-    },
-    {
-      path: "/categories",
-      icon: List,
-      label: "Categories",  
-    },
-    {
-      path: "/sub-categories",
-      icon: ArrowDownWideNarrow,
-      label: "Sub Categories",    
     }
   ];
 

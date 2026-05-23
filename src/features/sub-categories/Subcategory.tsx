@@ -1,21 +1,35 @@
-import { useState } from "react";
-import { Plus, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Loader2, Edit, Trash2 } from "lucide-react";
 import Modal from "../../components/Modal";
-import { useGetSubCategoriesQuery } from "./subCategoriesApi";
+import {
+  useGetSubCategoriesQuery,
+  useCreateSubCategoryMutation,
+  useUpdateSubCategoryMutation,
+  useDeleteSubCategoryMutation
+} from "./subCategoriesApi";
 import { useGetCategoriesQuery } from "../category/categoriesApi";
+import toast from "react-hot-toast";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 export function Subcategory() {
   const [open, setOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [subcategoryName, setSubcategoryName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
   // GET APIs only
-  const { data: subcategories = [], isLoading, error } = useGetSubCategoriesQuery();
+  const { data: subcategories = [], isLoading, error, refetch } = useGetSubCategoriesQuery();
   const { data: categories = [] } = useGetCategoriesQuery();
+  const [createSubCategory, { isLoading: isCreating }] = useCreateSubCategoryMutation();
+  const [updateSubCategory, { isLoading: isUpdating }] = useUpdateSubCategoryMutation();
+  const [deleteSubCategory] = useDeleteSubCategoryMutation();
 
   const handleClose = () => {
     setOpen(false);
+    setIsEditMode(false);
+    setEditingId(null);
     setSubcategoryName("");
     setDescription("");
     setSelectedCategory("");
@@ -23,15 +37,61 @@ export function Subcategory() {
 
   const isValid = subcategoryName.trim() && selectedCategory;
 
-  // Handle create will be implemented by team member
-  const handleCreate = () => {
-    console.log("Create subcategory:", {
-      name: subcategoryName,
-      description: description,
-      category_id: selectedCategory
-    });
-    // Your team member will implement the actual POST
-    handleClose();
+  // Handle create/update
+  const handleSubmit = async () => {
+    if (!isValid) return;
+
+    try {
+      let response;
+      if (isEditMode && editingId) {
+        // Update existing subcategory
+        const payload = {
+          id: editingId,
+          name: subcategoryName,
+          description,
+          category_id: Number(selectedCategory),
+        };
+        response = await updateSubCategory(payload).unwrap();
+        toast.success(response?.message || "Subcategory updated successfully");
+        refetch();
+      } else {
+        // Create new subcategory
+        const payload = {
+          name: subcategoryName,
+          description,
+          category_id: Number(selectedCategory),
+        };
+        response = await createSubCategory(payload).unwrap();
+        toast.success(response?.message || "Subcategory created successfully");
+        refetch();
+      }
+      handleClose();
+    } catch (error) {
+      const err = error as FetchBaseQueryError & {
+        data?: { message?: string }
+      };
+      toast.error(err.data?.message || `Failed to ${isEditMode ? 'update' : 'create'} subcategory`);
+    }
+  };
+
+  const handleEdit = (subcategory: any) => {
+    setIsEditMode(true);
+    setEditingId(subcategory.id);
+    setSelectedCategory(subcategory.category_id.toString());
+    setSubcategoryName(subcategory.name);
+    setDescription(subcategory.description || "");
+    setOpen(true);
+  };
+
+  const handleDeleteSubcategory = async (id: number) => {
+    if (!window.confirm("Delete this subcategory?")) return;
+    try {
+      await deleteSubCategory(id).unwrap();
+      toast.success("Subcategory deleted successfully");
+      refetch();
+    } catch (error: any) {
+      toast.error(error.data?.message || "Failed to delete subcategory");
+    }
   };
 
   if (error) {
@@ -78,17 +138,18 @@ export function Subcategory() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th> */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subcategory Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {subcategories.map((subcategory) => (
                 <tr key={subcategory.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{subcategory.id}</td>
+                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{subcategory.id}</td> */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
                       {subcategory.category_name || `Category ${subcategory.category_id}`}
@@ -103,6 +164,22 @@ export function Subcategory() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(subcategory.created_at).toLocaleDateString()}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button
+                      onClick={() => handleEdit(subcategory)}
+                      className="text-blue-600 hover:text-blue-900 mr-3"
+                      title="Edit subcategory"
+                    >
+                      <Edit size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteSubcategory(subcategory.id)}
+                      className="text-red-600 hover:text-red-900"
+                      title="Delete subcategory"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -110,8 +187,8 @@ export function Subcategory() {
         </div>
       )}
 
-      {/* Add Subcategory Modal */}
-      <Modal title="Add Subcategory" isOpen={open} onClose={handleClose}>
+      {/* Add/Edit Subcategory Modal */}
+      <Modal title={isEditMode ? "Edit Subcategory" : "Add Subcategory"} isOpen={open} onClose={handleClose}>
         <div className="relative">
           {/* Subcategory Name */}
           <div className="py-3">
@@ -170,15 +247,16 @@ export function Subcategory() {
               Cancel
             </button>
             <button
-              onClick={handleCreate}
-              disabled={!isValid}
+              onClick={handleSubmit}
+              disabled={!isValid || isCreating || isUpdating}
               className={`px-6 py-3 bg-orange-600 text-white text-sm font-semibold rounded-lg shadow-md border border-orange-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex items-center gap-2
-                ${!isValid
+                ${!isValid || isCreating || isUpdating
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:bg-orange-500 cursor-pointer hover:shadow-lg active:scale-95"
                 }`}
             >
-              Confirm
+              {(isCreating || isUpdating) && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isCreating ? 'Creating...' : isUpdating ? 'Updating...' : (isEditMode ? 'Update Subcategory' : 'Add Subcategory')}
             </button>
           </div>
         </div>

@@ -3,8 +3,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Login } from "./screens/Login";
 import { Dashboard } from "./screens/Dashboard";
 import { FoodItemsList } from "./features/fooditems/FoodItemsList";
-import { AddFoodItem } from "./screens/AddFoodItem";
-import { EditFoodItem } from "./screens/EditFoodItem";
+import { AddFoodItem } from "./features/fooditems/AddFoodItem";
+import { EditFoodItem } from "./features/fooditems/EditFoodItem";
 import { OrdersManagement } from "./screens/OrdersManagement";
 import { Profile } from "./screens/Profile";
 
