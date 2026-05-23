@@ -58,10 +58,11 @@ export function EditFoodItem() {
         is_available: foodItem.is_available,
       });
       if (foodItem.image) {
-        const imageUrl = `${import.meta.env.VITE_API_URL}/${foodItem.image}`;
+        setCurrentImage(foodItem.image);
 
-        setCurrentImage(imageUrl);
-        setImagePreview(imageUrl);
+        setImagePreview(
+          `${import.meta.env.VITE_API_URL}/${foodItem.image}`
+        );
       }
     }
   }, [foodItem]);
