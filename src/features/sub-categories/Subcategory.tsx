@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Plus, Loader2, Edit, Trash2 } from "lucide-react";
 import Modal from "../../components/Modal";
 import {
