@@ -83,7 +83,7 @@ export function FoodItemsList() {
           className="flex items-center gap-2 bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-all shadow-lg hover:shadow-xl"
         >
           <Plus size={20} />
-          Add New Item
+          Add New Fooditem
         </Link>
       </div>
 
